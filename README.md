@@ -138,7 +138,7 @@ All traces are stored in `AnalysisReport.reasoning_traces` for full auditability
 ## Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/deepsurvey.git
+git clone https://github.com/huozuilv/deepsurvey.git
 cd deepsurvey
 
 # Core dependencies (required)
@@ -332,7 +332,7 @@ llm = LLMClient(
   author = {DeepSurvey Contributors},
   title = {DeepSurvey: Deep Multi-Agent Literature Synthesis},
   year = {2025},
-  url = {https://github.com/YOUR_USERNAME/deepsurvey},
+  url = {https://github.com/huozuilv/deepsurvey},
   note = {An academic-oriented multi-agent system for automated literature review},
 }
 ```
