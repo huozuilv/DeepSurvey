@@ -22,6 +22,7 @@ import argparse
 import json
 import sys
 from datetime import datetime
+from typing import List
 
 from .llm_client import LLMClient
 from .models import Author, Paper
@@ -30,7 +31,7 @@ from .orchestrator import ResearchOrchestrator
 
 # ── Demo Papers ──────────────────────────────────────────────────────────────
 
-def create_demo_papers() -> list[Paper]:
+def create_demo_papers() -> List[Paper]:
     """
     Create a set of realistic demo papers about Large Language Model
     alignment and safety — a topic with genuine academic debates,

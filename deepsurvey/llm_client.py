@@ -9,7 +9,7 @@ import json
 import os
 import re
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Dict, List, Optional, Tuple
 
 
 @dataclass
@@ -52,14 +52,14 @@ class LLMClient:
 
     # ── Public API ───────────────────────────────────────────────────────────
 
-    def chat(self, messages: list[dict], temperature: float = 0.3) -> str:
+    def chat(self, messages: List[dict], temperature: float = 0.3) -> str:
         """Simple chat completion, returns answer text."""
         result = self._dispatch(messages, temperature, cot=False)
         return result.answer
 
     def chain_of_thought(
         self,
-        messages: list[dict],
+        messages: List[dict],
         temperature: float = 0.3,
     ) -> CoTResult:
         """Chat completion with explicit chain-of-thought reasoning."""
@@ -69,7 +69,7 @@ class LLMClient:
 
     def _dispatch(
         self,
-        messages: list[dict],
+        messages: List[dict],
         temperature: float,
         cot: bool,
     ) -> CoTResult:
@@ -84,7 +84,7 @@ class LLMClient:
 
     def _call_openai(
         self,
-        messages: list[dict],
+        messages: List[dict],
         temperature: float,
         cot: bool,
     ) -> CoTResult:
@@ -109,7 +109,7 @@ class LLMClient:
 
     def _call_anthropic(
         self,
-        messages: list[dict],
+        messages: List[dict],
         temperature: float,
         cot: bool,
     ) -> CoTResult:
@@ -151,7 +151,7 @@ class LLMClient:
 
     # ── Simulation backend (for demo without API keys) ───────────────────────
 
-    def _simulate(self, messages: list[dict], cot: bool) -> CoTResult:
+    def _simulate(self, messages: List[dict], cot: bool) -> CoTResult:
         """Simulate LLM responses for demonstration purposes."""
         # Extract the last user message as the query
         user_msg = ""
@@ -171,7 +171,7 @@ class LLMClient:
 
     def _generate_simulation(
         self, system: str, query: str, cot: bool
-    ) -> tuple[str, str]:
+    ) -> Tuple[str, str]:
         """Generate simulated reasoning based on query content."""
         reasoning = ""
         answer = ""
@@ -288,7 +288,7 @@ class LLMClient:
 
     # ── Helpers ──────────────────────────────────────────────────────────────
 
-    def _inject_cot_prompt(self, messages: list[dict]) -> list[dict]:
+    def _inject_cot_prompt(self, messages: List[dict]) -> List[dict]:
         """Inject chain-of-thought prompting into messages."""
         cot_instruction = (
             "Think through this step by step. Break down the problem, consider "

@@ -8,7 +8,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -59,12 +59,12 @@ class Paper(BaseModel):
     """A research paper under analysis."""
     id: str = Field(default_factory=_uid)
     title: str
-    authors: list[Author] = Field(default_factory=list)
+    authors: List[Author] = Field(default_factory=list)
     year: int = 2024
     abstract: str = ""
     venue: str = ""
-    sections: dict[str, str] = Field(default_factory=dict)
-    citations: list[str] = Field(default_factory=list)
+    sections: Dict[str, str] = Field(default_factory=dict)
+    citations: List[str] = Field(default_factory=list)
     full_text: str = ""
 
 
@@ -77,7 +77,7 @@ class Claim(BaseModel):
     evidence: str = ""
     confidence: Confidence = Confidence.MEDIUM
     section: str = ""
-    related_claims: list[str] = Field(default_factory=list)
+    related_claims: List[str] = Field(default_factory=list)
 
 
 class Relation(BaseModel):
@@ -94,8 +94,8 @@ class ResearchGap(BaseModel):
     """An identified gap in the research landscape."""
     id: str = Field(default_factory=_uid)
     description: str
-    related_claims: list[str] = Field(default_factory=list)
-    related_papers: list[str] = Field(default_factory=list)
+    related_claims: List[str] = Field(default_factory=list)
+    related_papers: List[str] = Field(default_factory=list)
     significance: str = ""
     suggested_approach: str = ""
 
@@ -121,7 +121,7 @@ class ReasoningStep(BaseModel):
     thought: str
     observation: str = ""
     conclusion: str = ""
-    references: list[str] = Field(default_factory=list)
+    references: List[str] = Field(default_factory=list)
     timestamp: datetime = Field(default_factory=datetime.now)
 
 
@@ -129,7 +129,7 @@ class ReasoningChain(BaseModel):
     """A complete chain-of-thought reasoning trace."""
     id: str = Field(default_factory=_uid)
     question: str
-    steps: list[ReasoningStep] = Field(default_factory=list)
+    steps: List[ReasoningStep] = Field(default_factory=list)
     final_answer: str = ""
     confidence: Confidence = Confidence.MEDIUM
 
@@ -155,13 +155,13 @@ class AgentMessage(BaseModel):
 class AnalysisReport(BaseModel):
     """Final synthesis report produced by the multi-agent system."""
     title: str
-    papers_analyzed: list[str] = Field(default_factory=list)
+    papers_analyzed: List[str] = Field(default_factory=list)
     executive_summary: str = ""
-    key_findings: list[str] = Field(default_factory=list)
-    contradictions: list[Contradiction] = Field(default_factory=list)
-    research_gaps: list[ResearchGap] = Field(default_factory=list)
+    key_findings: List[str] = Field(default_factory=list)
+    contradictions: List[Contradiction] = Field(default_factory=list)
+    research_gaps: List[ResearchGap] = Field(default_factory=list)
     methodology_comparison: str = ""
-    future_directions: list[str] = Field(default_factory=list)
-    reasoning_traces: list[ReasoningChain] = Field(default_factory=list)
+    future_directions: List[str] = Field(default_factory=list)
+    reasoning_traces: List[ReasoningChain] = Field(default_factory=list)
     knowledge_graph_stats: dict = Field(default_factory=dict)
     generated_at: datetime = Field(default_factory=datetime.now)

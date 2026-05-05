@@ -7,7 +7,7 @@ citation chain tracing, contradiction detection, and gap analysis.
 from __future__ import annotations
 
 from collections import defaultdict
-from typing import Callable, Optional
+from typing import Callable, Dict, List, Optional
 
 import networkx as nx
 
@@ -30,9 +30,9 @@ class KnowledgeGraph:
 
     def __init__(self):
         self.graph = nx.DiGraph()
-        self._papers: dict[str, Paper] = {}
-        self._claims: dict[str, Claim] = {}
-        self._relations: dict[str, Relation] = {}
+        self._papers: Dict[str, Paper] = {}
+        self._claims: Dict[str, Claim] = {}
+        self._relations: Dict[str, Relation] = {}
 
     # ── Node Management ──────────────────────────────────────────────────────
 
@@ -89,13 +89,13 @@ class KnowledgeGraph:
     def get_claim(self, claim_id: str) -> Optional[Claim]:
         return self._claims.get(claim_id)
 
-    def get_claims_by_type(self, claim_type: ClaimType) -> list[Claim]:
+    def get_claims_by_type(self, claim_type: ClaimType) -> List[Claim]:
         return [c for c in self._claims.values() if c.type == claim_type]
 
-    def get_claims_by_paper(self, paper_id: str) -> list[Claim]:
+    def get_claims_by_paper(self, paper_id: str) -> List[Claim]:
         return [c for c in self._claims.values() if c.paper_id == paper_id]
 
-    def get_relations_by_type(self, rel_type: RelationType) -> list[Relation]:
+    def get_relations_by_type(self, rel_type: RelationType) -> List[Relation]:
         return [r for r in self._relations.values() if r.type == rel_type]
 
     # ── Multi-hop Reasoning ──────────────────────────────────────────────────
@@ -105,7 +105,7 @@ class KnowledgeGraph:
         source_id: str,
         target_id: str,
         max_length: int = 5,
-    ) -> list[list[str]]:
+    ) -> List[List[str]]:
         """Find all paths between two nodes (citation chain tracing)."""
         try:
             paths = list(
@@ -115,7 +115,7 @@ class KnowledgeGraph:
         except (nx.NetworkXNoPath, nx.NodeNotFound):
             return []
 
-    def get_supporting_claims(self, claim_id: str) -> list[Claim]:
+    def get_supporting_claims(self, claim_id: str) -> List[Claim]:
         """Find claims that support the given claim."""
         supporting = []
         for pred in self.graph.predecessors(claim_id):
@@ -125,7 +125,7 @@ class KnowledgeGraph:
                     supporting.append(self._claims[pred])
         return supporting
 
-    def get_contradicting_claims(self, claim_id: str) -> list[Claim]:
+    def get_contradicting_claims(self, claim_id: str) -> List[Claim]:
         """Find claims that contradict the given claim."""
         contradicting = []
         for pred in self.graph.predecessors(claim_id):
@@ -137,12 +137,12 @@ class KnowledgeGraph:
 
     def get_transitive_relations(
         self, source_id: str, relation_type: RelationType
-    ) -> list[list[str]]:
+    ) -> List[List[str]]:
         """Find transitive closure of a relation type starting from a node."""
         paths = []
         visited = set()
 
-        def dfs(node: str, current_path: list[str]):
+        def dfs(node: str, current_path: List[str]):
             visited.add(node)
             for succ in self.graph.successors(node):
                 edge = self.graph.edges.get((node, succ), {})
@@ -157,7 +157,7 @@ class KnowledgeGraph:
 
     # ── Contradiction Detection ──────────────────────────────────────────────
 
-    def detect_contradictions(self) -> list[Contradiction]:
+    def detect_contradictions(self) -> List[Contradiction]:
         """Detect contradictions by traversing the graph for contradict edges."""
         contradictions = []
         for source, target, data in self.graph.edges(data=True):
@@ -177,7 +177,7 @@ class KnowledgeGraph:
 
     # ── Gap Analysis ─────────────────────────────────────────────────────────
 
-    def identify_structural_gaps(self) -> list[ResearchGap]:
+    def identify_structural_gaps(self) -> List[ResearchGap]:
         """Identify structural gaps based on graph density analysis."""
         gaps = []
 

@@ -20,7 +20,7 @@ import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Dict, List, Optional
 
 from .agents import (
     CriticAgent,
@@ -59,15 +59,15 @@ class WorkflowPhase(str, Enum):
 class WorkflowState:
     """Tracks the state of the multi-agent workflow."""
     phase: WorkflowPhase = WorkflowPhase.INIT
-    papers: list[Paper] = field(default_factory=list)
-    claims: list[Claim] = field(default_factory=list)
-    relations: list[Relation] = field(default_factory=list)
-    gaps: list[ResearchGap] = field(default_factory=list)
-    contradictions: list[Contradiction] = field(default_factory=list)
+    papers: List[Paper] = field(default_factory=list)
+    claims: List[Claim] = field(default_factory=list)
+    relations: List[Relation] = field(default_factory=list)
+    gaps: List[ResearchGap] = field(default_factory=list)
+    contradictions: List[Contradiction] = field(default_factory=list)
     synthesis: dict = field(default_factory=dict)
     critique: dict = field(default_factory=dict)
-    reasoning_chains: list[ReasoningChain] = field(default_factory=list)
-    messages: list[AgentMessage] = field(default_factory=list)
+    reasoning_chains: List[ReasoningChain] = field(default_factory=list)
+    messages: List[AgentMessage] = field(default_factory=list)
     iteration: int = 0
     started_at: datetime = field(default_factory=datetime.now)
 
@@ -103,7 +103,7 @@ class ResearchOrchestrator:
 
     # ── Main Pipeline ────────────────────────────────────────────────────────
 
-    def analyze(self, papers: list[Paper]) -> AnalysisReport:
+    def analyze(self, papers: List[Paper]) -> AnalysisReport:
         """
         Run the full multi-agent analysis pipeline on a set of papers.
 
@@ -149,14 +149,14 @@ class ResearchOrchestrator:
 
     # ── Pipeline Phases ──────────────────────────────────────────────────────
 
-    def _phase_load_papers(self, papers: list[Paper]) -> None:
+    def _phase_load_papers(self, papers: List[Paper]) -> None:
         self._log_header("Phase 1: Loading Papers into Knowledge Graph")
         for paper in papers:
             self.kg.add_paper(paper)
             self._log(f"  Loaded: {paper.title[:60]}...")
         self._log(f"  Total: {self.kg.paper_count} papers in knowledge graph")
 
-    def _phase_decompose(self, papers: list[Paper]) -> None:
+    def _phase_decompose(self, papers: List[Paper]) -> None:
         self._log_header("Phase 2: Paper Decomposition (Long-Chain Reasoning)")
         self.state.phase = WorkflowPhase.DECOMPOSE
 

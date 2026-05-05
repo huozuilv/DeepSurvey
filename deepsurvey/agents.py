@@ -15,7 +15,7 @@ import json
 import re
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Optional
+from typing import Dict, List, Optional
 
 from .knowledge_graph import KnowledgeGraph
 from .llm_client import CoTResult, LLMClient
@@ -51,8 +51,8 @@ class BaseAgent(ABC):
         self.kg = kg
         self.llm = llm
         self.verbose = verbose
-        self.inbox: list[AgentMessage] = []
-        self.reasoning_traces: list[ReasoningChain] = []
+        self.inbox: List[AgentMessage] = []
+        self.reasoning_traces: List[ReasoningChain] = []
 
     @abstractmethod
     def system_prompt(self) -> str:
@@ -160,7 +160,7 @@ class DecomposerAgent(BaseAgent):
             "Output claims as a JSON array."
         )
 
-    def decompose_paper(self, paper: Paper) -> list[Claim]:
+    def decompose_paper(self, paper: Paper) -> List[Claim]:
         """Decompose a single paper into structured claims."""
         self._log(f"Decomposing: {paper.title[:60]}...")
 
@@ -182,7 +182,7 @@ class DecomposerAgent(BaseAgent):
         claims = self._parse_claims(chain.final_answer, paper.id)
         return claims
 
-    def _parse_claims(self, raw: str, paper_id: str) -> list[Claim]:
+    def _parse_claims(self, raw: str, paper_id: str) -> List[Claim]:
         """Parse claims from LLM output, with fallback extraction."""
         claims = []
 
@@ -257,13 +257,13 @@ class CrossReferenceAgent(BaseAgent):
 
     def cross_reference(
         self,
-        claims: list[Claim],
-        papers: list[Paper],
-    ) -> list[Relation]:
+        claims: List[Claim],
+        papers: List[Paper],
+    ) -> List[Relation]:
         """Find all cross-claim relations across papers."""
         self._log(f"Cross-referencing {len(claims)} claims from {len(papers)} papers...")
 
-        relations: list[Relation] = []
+        relations: List[Relation] = []
 
         # Build claim context
         claim_descriptions = []
@@ -303,7 +303,7 @@ class CrossReferenceAgent(BaseAgent):
 
         return relations
 
-    def _parse_relations(self, raw: str) -> list[Relation]:
+    def _parse_relations(self, raw: str) -> List[Relation]:
         """Parse relations from LLM output."""
         relations = []
         try:
@@ -351,14 +351,14 @@ class GapAnalyzerAgent(BaseAgent):
 
     def analyze_gaps(
         self,
-        papers: list[Paper],
-        claims: list[Claim],
-        relations: list[Relation],
-    ) -> list[ResearchGap]:
+        papers: List[Paper],
+        claims: List[Claim],
+        relations: List[Relation],
+    ) -> List[ResearchGap]:
         """Identify research gaps from the literature landscape."""
         self._log("Analyzing research gaps...")
 
-        gaps: list[ResearchGap] = []
+        gaps: List[ResearchGap] = []
 
         # 1. Structural gaps from graph analysis
         structural = self.kg.identify_structural_gaps()
@@ -391,7 +391,7 @@ class GapAnalyzerAgent(BaseAgent):
 
         return gaps
 
-    def _parse_gaps(self, raw: str) -> list[ResearchGap]:
+    def _parse_gaps(self, raw: str) -> List[ResearchGap]:
         """Parse research gaps from LLM output."""
         gaps = []
         try:
@@ -438,11 +438,11 @@ class SynthesizerAgent(BaseAgent):
 
     def synthesize(
         self,
-        papers: list[Paper],
-        claims: list[Claim],
-        relations: list[Relation],
-        gaps: list[ResearchGap],
-        contradictions: list[Contradiction],
+        papers: List[Paper],
+        claims: List[Claim],
+        relations: List[Relation],
+        gaps: List[ResearchGap],
+        contradictions: List[Contradiction],
     ) -> dict:
         """
         Produce a comprehensive synthesis of the literature.
@@ -521,7 +521,7 @@ class SynthesizerAgent(BaseAgent):
             "FUTURE": "future_directions",
         }
         current_section = "consensus"
-        buffers: dict[str, list[str]] = {k: [] for k in sections.values()}
+        buffers: Dict[str, List[str]] = {k: [] for k in sections.values()}
 
         for line in raw.split("\n"):
             line_stripped = line.strip()
@@ -567,8 +567,8 @@ class CriticAgent(BaseAgent):
 
     def review(
         self,
-        papers: list[Paper],
-        claims: list[Claim],
+        papers: List[Paper],
+        claims: List[Claim],
         synthesis: dict,
     ) -> dict:
         """Perform critical review of the entire analysis."""
