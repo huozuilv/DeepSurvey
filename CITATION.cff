@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: "DeepSurvey: Deep Multi-Agent Literature Synthesis"
+message: "If you use this software in your research, please cite it as below."
+type: software
+authors:
+  - name: "DeepSurvey Contributors"
+url: "https://github.com/YOUR_USERNAME/deepsurvey"
+repository-code: "https://github.com/YOUR_USERNAME/deepsurvey"
+abstract: >-
+  An academic-oriented multi-agent system for automated literature review,
+  knowledge graph construction, and research gap analysis. DeepSurvey
+  orchestrates five specialized AI agents that collaborate through long-chain
+  reasoning to transform research papers into structured synthesis reports.
+keywords:
+  - literature-review
+  - multi-agent
+  - knowledge-graph
+  - research-synthesis
+  - natural-language-processing
+  - academic-tools
+license: MIT
+version: 0.1.0
+date-released: "2025-05-05"
