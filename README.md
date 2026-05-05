@@ -328,10 +328,10 @@ llm = LLMClient(
 ## Citation
 
 ```bibtex
-@software{deepsurvey2025,
+@software{deepsurvey2026,
   author = {DeepSurvey Contributors},
   title = {DeepSurvey: Deep Multi-Agent Literature Synthesis},
-  year = {2025},
+  year = {2026},
   url = {https://github.com/huozuilv/deepsurvey},
   note = {An academic-oriented multi-agent system for automated literature review},
 }
